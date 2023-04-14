@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>다음 지도 API</title>
+    <style>
+    .categories {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 5;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    .category {
+        cursor: pointer;
+        margin: 0 5px;
+    }
+
+    .category.selected {
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+    <div id="map" style="width:100%;height:100vh;">
+    <div class="categories">
+        <span class="category selected" data-category="all">전체</span>
+        <span class="category" data-category="한식">한식</span>
+        <span class="category" data-category="일식">일식</span>
+		<span class="category" data-category="경양식">경양식</span>
+		<span class="category" data-category="분식">분식</span>
+    </div>
+</div>
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1077baf3744edb0d8b5f7207c94ae82a&libraries=services"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type = "text/javascript">
+        const url = 'https://api.odcloud.kr/api/3054122/v1/uddi:d6b81a7b-a61a-4ab6-8a4b-aaaa1044670c?page=1&perPage=100&returnType=JSON&serviceKey=3BoO7FOl8uOr1bD91CiF%2Bgx0L0bsprrzx2r2II99%2BqlA5PTkrWO0DgdcKgaihHxu7uuVtXnmHIxbLtZdw%2BL0dA%3D%3D';
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+            mapOption = {
+                center: new kakao.maps.LatLng(37.59491732, 126.9773213), // 지도의 중심좌표
+                level: 7, // 지도의 확대 레벨
+                mapTypeId : kakao.maps.MapTypeId.ROADMAP // 지도종류
+            };
+
+        // 지도를 생성한다
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+
+        // 지도에 확대 축소 컨트롤을 생성한다
+        var zoomControl = new kakao.maps.ZoomControl();
+
+        // 지도의 우측에 확대 축소 컨트롤을 추가한다
+        map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+                fetch(url)
+            .then((res) => res.json())
+            .then(async (myJson) => {
+                const stores = myJson.data;
+
+                await createMarkers(stores);
+                showMarkers('all');
+            });
+
+		// 마커를 저장할 배열
+        let markers = [];
+
+		//데이터 목록에 대해 마커를 생성하고 배열을 추가한다
+        async function createMarkers(stores) {
+    		for (let store of stores) {
+        		const address = store['소재지(도로명)'];
+        		const geocoder = new kakao.maps.services.Geocoder();
+
+                // 주소 좌표 검색에 예외 처리를 해야 오류가 안 난다
+        		try {
+            		const result = await new Promise((resolve, reject) => {
+                		geocoder.addressSearch(address, function (result, status) {
+                    		if (status === kakao.maps.services.Status.OK) {
+                        		resolve(result);
+                    		} else {
+                        		reject(new Error('Geocode was not successful for the following reason: ' + status));
+                    		}
+                		});
+            		});
+
+            		const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+            		const marker = new kakao.maps.Marker({ position: coords });
+            		const infowindow = new kakao.maps.InfoWindow({
+                		content: store['업소명'] + '<br>' + store['업태'] + '<br>' + store['주메뉴']
+            		});
+
+					// 마커에 마우스를 올렸을 때 인포윈도우가 열리도록 이벤트 리스너를 추가한다
+					kakao.maps.event.addListener(marker, 'mouseover', () => {
+						if (!openedInfowindow || openedInfowindow !== infowindow) {
+        					infowindow.open(map, marker);
+    					}
+					});
+
+					// 마커에서 마우스를 벗어났을 때 인포윈도우가 닫히도록 이벤트 리스너를 추가한다
+					kakao.maps.event.addListener(marker, 'mouseout', () => {
+    					if (!openedInfowindow || openedInfowindow !== infowindow) {
+        					infowindow.close();
+    					}
+					});
+
+					let openedInfowindow = null;
+
+					// 마커 클릭 시 인포윈도우를 열거나 닫는 이벤트 리스너를 추가한다
+					kakao.maps.event.addListener(marker, 'click', () => {
+    					if (openedInfowindow && openedInfowindow !== infowindow) {
+        					openedInfowindow.close();
+    					}
+
+    					if (infowindow.getMap()) {
+        					infowindow.close();
+        					openedInfowindow = null;
+    					} else {
+        					infowindow.open(map, marker);
+        					openedInfowindow = infowindow;
+    					}
+					});
+
+                    //카테고리 분류를 위한 마커 설정
+            		marker.setMap(map);
+            		marker.category = store['업태'];
+            		markers.push(marker);
+        		} catch (error) {
+            		console.error(error);
+        		}
+    		}
+		}
+
+		// 정보 창을 열거나 닫는 함수
+		function toggleInfoWindow(map, marker, infowindow) {
+    		if (infowindow.getMap()) {
+        		infowindow.close();
+    		} else {
+        		infowindow.open(map, marker);
+    		}
+		}
+
+		// 지정된 카테고리에 해당하는 마커를 표시하거나 숨긴다
+        function showMarkers(category) {
+            for (let marker of markers) {
+                if (category === 'all' || marker.category === category) {
+                    marker.setMap(map);
+                } else {
+                    marker.setMap(null);
+                }
+            }
+        }
+
+		// 카테고리 버튼 클릭 시 선택한 카테고리의 마커를 표시하고, 이전에 선택한 버튼의 스타일을 제거한다
+        $(document).on('click', '.category', function () {
+            $('.category').removeClass('selected');
+            $(this).addClass('selected');
+            const category = $(this).data('category');
+            showMarkers(category);
+        });
+    </script>
+</body>
+</html>
