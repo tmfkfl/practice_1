@@ -10,7 +10,7 @@
 	<head>
 		{% load static %}
 
-		<title>Alpha by HTML5 UP</title>
+		<title>모범식당 안내서비스</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="../../static/assets/css/main.css" />
@@ -31,8 +31,17 @@
 					<ul class="actions special">
 						<li><a href= "{% url 'pybo:index' %}" class="button primary">게시판</a></li>
 						<li><a href="{% url 'map:map' %}" class="button">지도</a></li>
-						<li><a href="../" class="button primary">챗봇</a></li>
+						<li><a class="button primary" onclick="new_window();">챗봇</a></li>
 					</ul>
+					 <script>
+      function new_window() {
+        window.open(
+          "second/",
+          "Child",
+          "width=400, height=300, top=50, left=50"
+        );
+      }
+    </script>
 				</section>
 
 			<!-- Main -->

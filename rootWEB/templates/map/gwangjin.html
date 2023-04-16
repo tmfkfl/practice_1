@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>다음 지도 API</title>
+    <title>광진구</title>
     <style>
     .categories {
         position: absolute;
@@ -24,10 +24,32 @@
     .category.selected {
         font-weight: bold;
     }
+
+    div, ul, li {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding:0;margin:0}
+a {text-decoration:none;}
+
+.quickmenu {position:absolute;width:90px;top:50%;margin-top:-50px;right:10px;background:#fff;}
+.quickmenu ul {position:relative;float:left;width:100%;display:inline-block;*display:inline;border:1px solid #ddd;}
+.quickmenu ul li {float:left;width:100%;border-bottom:1px solid #ddd;text-align:center;display:inline-block;*display:inline;}
+.quickmenu ul li a {position:relative;float:left;width:100%;height:30px;line-height:30px;text-align:center;color:#999;font-size:9.5pt;}
+.quickmenu ul li a:hover {color:#000;}
+.quickmenu ul li:last-child {border-bottom:0;}
+
+.content {position:relative;min-height:1000px;}
 </style>
 </head>
 <body>
-    <div id="map" style="width:100%;height:100vh;">
+<div class="quickmenu" style="z-index: 2;">
+  <ul>
+    <li><a href="../../">메인페이지</a></li>
+    <li><a href="../">구 지역</a></li>
+    <li><a href="{% url 'pybo:index' %}">게시판</a></li>
+    <li><a class="button primary" onclick="new_window();">챗봇</a></li>
+  </ul>
+</div>
+
+
+    <div id="map" style="width:100%;height:100vh;z-index: 1;">
     <div class="categories">
         <span class="category selected" data-category="all">전체</span>
         <span class="category" data-category="한식">한식</span>
@@ -40,6 +62,25 @@
     <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1077baf3744edb0d8b5f7207c94ae82a&libraries=services"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script type = "text/javascript">
+       // 퀵메뉴
+        $(document).ready(function(){
+            var currentPosition = parseInt($(".quickmenu").css("top"));
+        $(window).scroll(function() {
+             var position = $(window).scrollTop();
+        $(".quickmenu").stop().animate({"top":position+currentPosition+"px"},1000);
+            });
+        });
+
+       //챗봇 자식 새창띄우기
+        function new_window() {
+        window.open(
+          "../../second/",
+          "Child",
+          "width=400, height=300, top=50, left=50"
+        );
+      }
+
+
         const url = 'https://api.odcloud.kr/api/15052407/v1/uddi:5f110722-c6ab-4c58-9fa2-ce8e9182cdff?page=1&perPage=100&returnType=JSON&serviceKey=3BoO7FOl8uOr1bD91CiF%2Bgx0L0bsprrzx2r2II99%2BqlA5PTkrWO0DgdcKgaihHxu7uuVtXnmHIxbLtZdw%2BL0dA%3D%3D';
         var mapContainer = document.getElementById('map'), // 지도를 표시할 div
             mapOption = {

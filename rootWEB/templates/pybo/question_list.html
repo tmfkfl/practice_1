@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% load pybo_filter %}
 {% block content %}
+<div class="quickmenu" style="z-index: 2;">
+  <ul>
+    <li><a href="../">메인페이지</a></li>
+    <li><a href="../map/">지도</a></li>
+    <li><a class="button primary" onclick="new_window();">챗봇</a></li>
+  </ul>
+</div>
+
 <div class="container my-3">
      <div class="row justify-content-between my-3">
          <div class="col-2">
@@ -126,6 +134,25 @@
 {% endblock %}
 {% block script %}
 <script type='text/javascript'>
+// 퀵메뉴
+        $(document).ready(function(){
+            var currentPosition = parseInt($(".quickmenu").css("top"));
+        $(window).scroll(function() {
+             var position = $(window).scrollTop();
+        $(".quickmenu").stop().animate({"top":position+currentPosition+"px"},1000);
+            });
+        });
+
+       //챗봇 자식 새창띄우기
+        function new_window() {
+        window.open(
+          "../second/",
+          "Child",
+          "width=400, height=300, top=50, left=50"
+        );
+      }
+
+
 const page_elements = document.getElementsByClassName("page-link");
 Array.from(page_elements).forEach(function(element) {
     element.addEventListener('click', function() {

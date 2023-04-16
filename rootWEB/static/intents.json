@@ -1,0 +1,35 @@
+{"intents": [
+    {"tag": "greeting",
+     "patterns": ["Hi", "Hey", "Is anyone there?", "Hello", "Hay", "안녕", "거기 누구 있나요?", "ㅎ2", "하이"],
+     "responses": ["반갑습니다", "Hi", "안녕", "안녕하세요"]
+    },
+    {"tag": "goodbye",
+     "patterns": ["Bye", "See you later", "Goodbye","잘가","바이","좋은정보"],
+     "responses": ["이용해주셔서 감사합니다.", "좋은 하루보내세요", "안녕히가세요"]
+    },
+    {"tag": "thanks",
+     "patterns": ["Thanks", "Thank you", "That's helpful", "Thanks for the help","고마워", "감사합니다", "칭찬"],
+     "responses": ["만족하셨다면 감사합니다.", "칭찬 감사합니다", "감사합니다"]
+    },
+    {"tag": "about",
+     "patterns": ["Who are you?", "What are you?", "Who you are?" ,"너는 뭐니?", "너는 뭐하니?", "뭐임?","하는게 뭐니?", "하는일은?", "하는일?" ],
+     "responses": ["저는 모범식당을 알려주는 챗봇입니다.", "모범식당 챗봇입니다 부족하지만 이해부탁드립니다."]
+    },
+    {"tag": "name",
+    "patterns": ["what is your name", "what should I call you", "whats your name?", "이름", "이름이 뭐냐?", "이름이 무엇입니까?", "누구니?", "누구?"],
+    "responses": ["저는 모범식당 챗봇입니다.", "저는 챗봇!", "저는 모범식당 챗봇입니다"]
+    },
+    {"tag": "help",
+    "patterns": ["Could you help me?", "give me a hand please", "Can you help?", "What can you do for me?", "I need a support", "I need a help", "support me please","헬프","도와줘"],
+    "responses": ["어떻게 도와드릴까요?", "항상 도와드리려고 노력중입니다."]
+    },
+    {"tag": "restaurants",
+    "patterns": ["좋은 식당", "좋은 식당은 어떻게 찾아", "모범 음식점", "깨끗한 식당", "모범식당", "식당추천", "식당 추천"],
+    "responses": ["지도 메뉴의 모범식당 마커를 참고해주세요"]
+    },
+    {"tag": "recommand",
+    "patterns": ["메뉴 추천","뭐 먹을까?","뭐 먹지","먹고 싶은게 없어","음식 추천", "추천"],
+    "responses": ["순대국밥 어떻습니까?","부대찌개는 어떻습니까?", "쌈밥은 어떻습니까", "황태 해장국은 어떻습니까?", "백반은 어떻습니까?", "샐러드는 어떻습니까?", "알아서 하셈"]
+    }
+]
+}

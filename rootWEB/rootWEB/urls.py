@@ -24,5 +24,6 @@ urlpatterns = [
     path("common/", include("common.urls")),
     path("main", include("main.urls", namespace='main')),
     path("map/", include("map.urls", namespace='map')),
-    path("", views.index, name='index')
+    path("", views.index, name='index'),
+    path("second/", include('secondApp.urls')),
 ]

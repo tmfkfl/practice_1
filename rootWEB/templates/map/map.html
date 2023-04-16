@@ -39,9 +39,9 @@ a {text-decoration:none;}
 <body>
 <div class="quickmenu" style="z-index: 2;">
   <ul>
-    <li><a href="http://127.0.0.1:8000/">메인페이지</a></li>
+    <li><a href="../">메인페이지</a></li>
     <li><a href="{% url 'pybo:index' %}">게시판</a></li>
-    <li><a href="#">챗봇</a></li>
+    <li><a class="button primary" onclick="new_window();">챗봇</a></li>
   </ul>
 </div>
 <div id="map" style="width:100%;height:100vh; z-index: 1;"></div>
@@ -56,15 +56,25 @@ a {text-decoration:none;}
 -->
 
 <script>
-// 지도에 폴리곤으로 표시할 영역데이터 배열입니다
-$(document).ready(function(){
-  var currentPosition = parseInt($(".quickmenu").css("top"));
-  $(window).scroll(function() {
-    var position = $(window).scrollTop();
-    $(".quickmenu").stop().animate({"top":position+currentPosition+"px"},1000);
-  });
-});
 
+// 퀵메뉴
+        $(document).ready(function(){
+            var currentPosition = parseInt($(".quickmenu").css("top"));
+        $(window).scroll(function() {
+             var position = $(window).scrollTop();
+        $(".quickmenu").stop().animate({"top":position+currentPosition+"px"},1000);
+            });
+        });
+
+       //챗봇 자식 새창띄우기
+        function new_window() {
+        window.open(
+          "../second/",
+          "Child",
+          "width=400, height=300, top=50, left=50"
+        );
+      }
+// 지도에 폴리곤으로 표시할 영역데이터 배열입니다
 let areas = data;
 
 
